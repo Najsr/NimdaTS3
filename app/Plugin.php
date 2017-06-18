@@ -113,7 +113,6 @@ class Plugin
                     break;
             }
         }
-
     }
 
     function trigger()
@@ -131,8 +130,8 @@ class Plugin
      */
     static function sortByLengthASC($array)
     {
-        usort($array, function($a, $b){
-            return strlen($a)-strlen($b);
+        usort($array, function ($alpha, $beta) {
+            return strlen($alpha)-strlen($beta);
         });
 
         return $array;
@@ -145,8 +144,8 @@ class Plugin
      */
     static function sortByLengthDESC($array)
     {
-        usort($array, function($a, $b){
-            return strlen($b)-strlen($a);
+        usort($array, function ($alpha, $beta) {
+            return strlen($beta)-strlen($alpha);
         });
 
         return $array;
@@ -164,17 +163,17 @@ class Plugin
             $client = $this->teamSpeak3Bot->node->clientGetById(@$this->info['invokerid']?$this->info['invokerid']:$this->info['clid']);
 
             if (\App\TeamSpeak3Bot::$config['newLineNewMessage'] === false) {
-               $client->message($text);
-               $this->teamSpeak3Bot->printOutput($text);
-            } else {
-                $messages = explode("\n", $text);
-                foreach ($messages as $message) {
-                    if (!$message) {
-                        continue;
-                    }
-                    $client->message($message);
-                    $this->teamSpeak3Bot->printOutput($message);
+                $client->message($text);
+                $this->teamSpeak3Bot->printOutput($text);
+                return;
+            }
+            $messages = explode("\n", $text);
+            foreach ($messages as $message) {
+                if (!$message) {
+                    continue;
                 }
+                $client->message($message);
+                $this->teamSpeak3Bot->printOutput($message);
             }
         } catch (Ts3Exception $e) {
             $this->teamSpeak3Bot->onException($e);
